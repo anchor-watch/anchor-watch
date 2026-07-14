@@ -1,0 +1,31 @@
+name: Security
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  npm-audit:
+    name: npm audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      # Production deps only: as of this workflow's authoring, vitest's
+      # esbuild/vite dev-server chain has open moderate/high advisories
+      # (dev-server-only request-forwarding issue, not a production risk).
+      # Gating on --omit=dev avoids failing CI on a known dev-tooling
+      # advisory unrelated to shipped code; revisit when vitest 4.x (a
+      # breaking change) is adopted.
+      - run: npm audit --omit=dev --audit-level=high

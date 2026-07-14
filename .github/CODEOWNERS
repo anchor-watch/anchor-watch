@@ -1,0 +1,8 @@
+# Each line is a file pattern followed by one or more owners.
+# Order matters: the last matching pattern takes precedence.
+
+* @Rendezvous-droid
+
+packages/trust-score/ @Rendezvous-droid
+docs/METHODOLOGY.md @Rendezvous-droid
+.github/ @Rendezvous-droid
