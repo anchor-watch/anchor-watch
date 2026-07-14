@@ -1,0 +1,21 @@
+{
+  "name": "@anchor-watch/indexer",
+  "version": "0.1.0",
+  "description": "Fetches real on-chain transaction history and SEP-1 metadata feeding @anchor-watch/trust-score.",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@anchor-watch/trust-score": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}

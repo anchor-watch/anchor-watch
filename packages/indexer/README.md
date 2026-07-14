@@ -1,26 +1,35 @@
 # Indexer
 
-**Status: design skeleton, not yet implemented** (Months 3–5 milestone).
+**Status: core fetch logic implemented and tested against live testnet.**
+Not yet a running/scheduled service — see "What's not built yet" below.
 
-Feeds the `@anchor-watch/trust-score` package's inputs by:
+Feeds the `@anchor-watch/trust-score` package's inputs:
 
-1. Polling Stellar Horizon (or RPC) for each tracked anchor's SEP-31
-   transaction history — confirmed reachable and shaped as expected via
-   `e2e/smoke_test_horizon.sh`.
-2. Computing `successRate` and `transactionCount` per anchor from that
-   history.
-3. Fetching and parsing each anchor's SEP-1 `stellar.toml` for
-   `hasStellarTomlMetadata`.
-4. Where published, ingesting third-party attestations (e.g. the SCF-funded
-   Anchor Transparency Node) for `hasThirdPartyAttestation`.
-5. Feeding the assembled `TrustScoreInputs` into `computeTrustScore` and
-   persisting the result behind the Trust Score API.
+1. `fetchAccountHistory` — polls Stellar Horizon for an account's
+   transaction history and derives `successRate`/`transactionCount`.
+   Verified against a real account from this project's own testnet
+   activity (13+ real transactions) and a genuinely never-used, freshly
+   generated keypair (confirmed 404 on Horizon before writing the test).
+2. `hasStellarTomlMetadata` — fetches and does a minimal presence check on
+   an anchor's SEP-1 `stellar.toml`. Verified against the real, official
+   Stellar test anchor at `testanchor.stellar.org`.
+3. `computeAnchorTrustScoreLive` — assembles both into `TrustScoreInputs`
+   and calls `computeTrustScore`. All 5 tests in `__tests__/index.test.ts`
+   hit the live network for real, not mocks.
 
-## Why this isn't built yet
+## What's not built yet
 
-The scoring function and its inputs (`@anchor-watch/trust-score`) needed to
-be nailed down and tested first — building the data-fetching layer against
-an unstable target would mean rework. See the repo-level roadmap.
+- Ingesting third-party attestations (e.g. the SCF-funded Anchor
+  Transparency Node) for `hasThirdPartyAttestation` — tracked as its own
+  issue.
+- A scheduled/running service (this is currently a library of functions,
+  not a long-running poller) — see the repo roadmap for the Trust Score API
+  milestone that will call these on a cadence.
+- Resumable/incremental sync (currently refetches the last N transactions
+  each call rather than tracking a cursor) — fine for on-demand scoring, not
+  yet suitable for continuous indexing at scale.
+- A full SEP-1 parser (`hasStellarTomlMetadata` does a presence check, not a
+  structured parse of all fields).
 
 ## Open design questions
 
