@@ -1,0 +1,22 @@
+{
+  "name": "@anchor-watch/api",
+  "version": "0.1.0",
+  "description": "Trust Score API v1 — a minimal HTTP server exposing computeAnchorTrustScoreLive.",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@anchor-watch/indexer": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}
